@@ -18,7 +18,7 @@ interface CardData {
   theme: CardTheme;
 }
 
-// 8 magnifiques thèmes de couleurs pour chaque paire
+// 6 magnifiques thèmes distincts pour chacune des 6 paires
 export const COLOR_THEMES: CardTheme[] = [
   {
     name: 'bleu-royal',
@@ -68,46 +68,26 @@ export const COLOR_THEMES: CardTheme[] = [
     glow: 'rgba(6, 182, 212, 0.35)',
     badgeBg: '#06b6d4',
   },
-  {
-    name: 'orange-soleil',
-    bg: 'linear-gradient(145deg, #fff7ed 0%, #ffedd5 100%)',
-    border: '#f97316',
-    text: '#c2410c',
-    glow: 'rgba(249, 115, 22, 0.35)',
-    badgeBg: '#f97316',
-  },
-  {
-    name: 'indigo-nuit',
-    bg: 'linear-gradient(145deg, #eef2ff 0%, #e0e7ff 100%)',
-    border: '#6366f1',
-    text: '#4338ca',
-    glow: 'rgba(99, 102, 241, 0.35)',
-    badgeBg: '#6366f1',
-  },
 ];
 
-// Verbe ÊTRE au futur simple
+// Verbe ÊTRE au futur simple — EXACTEMENT LES 6 PAIRES (12 CARTES)
 const ETRE_PAIRS = [
-  ['Je',    'serai'],
-  ['Tu',    'seras'],
-  ['Il',    'sera'],
-  ['Elle',  'sera'],
-  ['Nous',  'serons'],
-  ['Vous',  'serez'],
-  ['Ils',   'seront'],
-  ['Elles', 'seront'],
+  ['Je',          'serai'],
+  ['Tu',          'seras'],
+  ['Il / Elle',   'sera'],
+  ['Nous',        'serons'],
+  ['Vous',        'serez'],
+  ['Ils / Elles', 'seront'],
 ];
 
-// Verbe AVOIR au futur simple
+// Verbe AVOIR au futur simple — EXACTEMENT LES 6 PAIRES (12 CARTES)
 const AVOIR_PAIRS = [
-  ['Je',    'aurai'],
-  ['Tu',    'auras'],
-  ['Il',    'aura'],
-  ['Elle',  'aura'],
-  ['Nous',  'aurons'],
-  ['Vous',  'aurez'],
-  ['Ils',   'auront'],
-  ['Elles', 'auront'],
+  ['Je',          'aurai'],
+  ['Tu',          'auras'],
+  ['Il / Elle',   'aura'],
+  ['Nous',        'aurons'],
+  ['Vous',        'aurez'],
+  ['Ils / Elles', 'auront'],
 ];
 
 // Cartes identiques
@@ -120,10 +100,6 @@ const WORDS = [
   '🍑 Pêche',
   '🍇 Raisin',
   '🍋 Citron',
-  '🍈 Melon',
-  '🥝 Kiwi',
-  '🍓 Fraise',
-  '🍍 Ananas',
 ];
 
 function buildIdentical(count: number): CardData[] {
@@ -151,10 +127,9 @@ function buildIdentical(count: number): CardData[] {
   return items;
 }
 
-function buildPronounPairs(source: string[][], count: number): CardData[] {
-  const selected = source.slice(0, count);
+function buildPronounPairs(source: string[][]): CardData[] {
   const items: CardData[] = [];
-  selected.forEach(([pronoun, conjugation], idx) => {
+  source.forEach(([pronoun, conjugation], idx) => {
     const theme = COLOR_THEMES[idx % COLOR_THEMES.length];
     items.push({
       uuid: `${idx}-p`,
@@ -185,27 +160,22 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-function cols(total: number) {
-  if (total <= 8) return 4;
-  if (total <= 12) return 4;
-  return 4;
-}
-
 const GameBoard: React.FC<Props> = ({ settings, onMatch, totalPairs }) => {
-  const [cards, setCards] = useState<CardData[]>([]);
+  const [cards, setCards]     = useState<CardData[]>([]);
   const [flipped, setFlipped] = useState<number[]>([]);
   const [matched, setMatched] = useState<Set<number>>(new Set());
-  const [locked, setLocked] = useState(false);
+  const [locked, setLocked]   = useState(false);
 
   useEffect(() => {
     let raw: CardData[];
     if (settings.mode === 'etre') {
-      raw = buildPronounPairs(ETRE_PAIRS, totalPairs);
+      raw = buildPronounPairs(ETRE_PAIRS); // Exactement 12 cartes
     } else if (settings.mode === 'avoir') {
-      raw = buildPronounPairs(AVOIR_PAIRS, totalPairs);
+      raw = buildPronounPairs(AVOIR_PAIRS); // Exactement 12 cartes
     } else {
       raw = buildIdentical(totalPairs);
     }
+    // Mélange aléatoire des 12 cartes
     setCards(shuffle(raw));
     setFlipped([]);
     setMatched(new Set());
@@ -234,23 +204,23 @@ const GameBoard: React.FC<Props> = ({ settings, onMatch, totalPairs }) => {
     }
   };
 
-  const gridCols = cols(cards.length);
-
   return (
-    <div className="game-board" style={{ gridTemplateColumns: `repeat(${gridCols}, 1fr)` }}>
-      {cards.map(card => (
-        <MemoryCard
-          key={card.uuid}
-          id={card.id}
-          content={card.content}
-          subLabel={card.subLabel}
-          theme={card.theme}
-          isFlipped={flipped.includes(card.id)}
-          isMatched={matched.has(card.id)}
-          onClick={handleClick}
-          disableClick={locked}
-        />
-      ))}
+    <div className="game-board-container">
+      <div className="game-board grid-12-cards">
+        {cards.map(card => (
+          <MemoryCard
+            key={card.uuid}
+            id={card.id}
+            content={card.content}
+            subLabel={card.subLabel}
+            theme={card.theme}
+            isFlipped={flipped.includes(card.id)}
+            isMatched={matched.has(card.id)}
+            onClick={handleClick}
+            disableClick={locked}
+          />
+        ))}
+      </div>
     </div>
   );
 };

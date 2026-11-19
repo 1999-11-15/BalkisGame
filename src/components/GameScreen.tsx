@@ -7,13 +7,10 @@ import GameScore from './GameScore';
 
 interface Props { settings: Settings; onFinish: (r: GameResult) => void; }
 
-// Easy=4, Medium=6, Hard=8 (8 covers all 8 pronoun pairs)
-const TOTAL_PAIRS: Record<string, number> = { easy: 4, medium: 6, hard: 8 };
-
-const MODE_LABELS: Record<string, string> = {
-  identical: '🔤 Cartes identiques',
-  etre:      '📗 Verbe ÊTRE au futur simple',
-  avoir:     '📘 Verbe AVOIR au futur simple',
+const MODE_TITLES: Record<string, string> = {
+  etre:      'Conjugaison du verbe ÊTRE — Futur simple',
+  avoir:     'Conjugaison du verbe AVOIR — Futur simple',
+  identical: 'Jeu de mémoire — Cartes identiques',
 };
 
 const GameScreen: React.FC<Props> = ({ settings, onFinish }) => {
@@ -22,7 +19,8 @@ const GameScreen: React.FC<Props> = ({ settings, onFinish }) => {
   const [score,    setScore]    = useState(0);
   const elapsedRef              = useRef(0);
 
-  const totalPairs = TOTAL_PAIRS[settings.difficulty];
+  // Pour les modes éducatifs, c'est toujours exactement 6 paires (12 cartes)
+  const totalPairs = settings.mode === 'etre' || settings.mode === 'avoir' ? 6 : 6;
   const progress   = totalPairs > 0 ? Math.round((matches / totalPairs) * 100) : 0;
 
   const handleMatch = (matched: boolean) => {
@@ -46,19 +44,18 @@ const GameScreen: React.FC<Props> = ({ settings, onFinish }) => {
         });
       }, 700);
     }
-  }, [matches]);
+  }, [matches, totalPairs]);
 
   return (
     <div className="game-container">
+      {/* Exercise Title Header */}
+      <div className="exercise-title-banner">
+        <h2>{MODE_TITLES[settings.mode] || MODE_TITLES.etre}</h2>
+        <span className="exercise-subtitle">Trouvez les 6 paires correspondantes (12 cartes)</span>
+      </div>
+
       {/* HUD bar */}
       <div className="game-hud">
-        <div className="hud-item" style={{ flex: 1 }}>
-          <span className="hud-label">📌 Mode</span>
-          <span className="hud-value" style={{ fontSize: 13 }}>{MODE_LABELS[settings.mode]}</span>
-        </div>
-
-        <div className="hud-divider" />
-
         <GameTimer elapsedRef={elapsedRef} />
 
         <div className="hud-divider" />
@@ -75,14 +72,14 @@ const GameScreen: React.FC<Props> = ({ settings, onFinish }) => {
         <div className="hud-divider" />
 
         <div className="progress-bar-wrap">
-          <span className="hud-label">✅ {matches}/{totalPairs} paires</span>
+          <span className="hud-label">✅ {matches}/{totalPairs} paires trouvées</span>
           <div className="progress-bar-bg">
             <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
           </div>
         </div>
       </div>
 
-      {/* Card grid */}
+      {/* Card grid (12 cartes) */}
       <GameBoard settings={settings} onMatch={handleMatch} totalPairs={totalPairs} />
     </div>
   );

@@ -13,10 +13,13 @@ const Dashboard: React.FC<Props> = ({ defaultSettings, onStart }) => {
   const [sound, setSound]           = useState(defaultSettings.sound);
   const [animations, setAnimations] = useState(defaultSettings.animations);
 
-  const previewLeft  = mode === 'identical' ? '🍎 Pomme' : 'Je';
-  const previewRight = mode === 'identical' ? '🍎 Pomme' : mode === 'etre' ? 'serai' : 'aurai';
+  const previewLeft  = mode === 'identical' ? '🍎 Pomme' : 'Il / Elle';
+  const previewRight = mode === 'identical' ? '🍎 Pomme' : mode === 'etre' ? 'sera' : 'aura';
   const previewSubLeft = mode === 'identical' ? 'Paire' : 'Pronom';
   const previewSubRight = mode === 'identical' ? 'Paire' : 'Futur';
+
+  // For the default educational mode (Être/Avoir), 6 pairs = 12 cards automatically
+  const isEducationalMode = mode === 'etre' || mode === 'avoir';
 
   return (
     <div className="dashboard">
@@ -42,23 +45,10 @@ const Dashboard: React.FC<Props> = ({ defaultSettings, onStart }) => {
         </div>
       </div>
 
-      {/* Sélection du Mode avec des boîtes colorées */}
+      {/* Sélection du Mode */}
       <div className="settings-section">
         <label className="section-title">Mode de jeu</label>
         <div className="option-boxes-grid">
-          <button
-            type="button"
-            className={`option-box box-mode-identical ${mode === 'identical' ? 'active' : ''}`}
-            onClick={() => setMode('identical')}
-          >
-            <span className="box-icon">🔤</span>
-            <div className="box-details">
-              <strong>Identiques</strong>
-              <span>Images & fruits</span>
-            </div>
-            {mode === 'identical' && <span className="box-check">✓</span>}
-          </button>
-
           <button
             type="button"
             className={`option-box box-mode-etre ${mode === 'etre' ? 'active' : ''}`}
@@ -67,7 +57,7 @@ const Dashboard: React.FC<Props> = ({ defaultSettings, onStart }) => {
             <span className="box-icon">📗</span>
             <div className="box-details">
               <strong>Verbe ÊTRE</strong>
-              <span>Futur simple</span>
+              <span>Futur simple (12 cartes)</span>
             </div>
             {mode === 'etre' && <span className="box-check">✓</span>}
           </button>
@@ -80,59 +70,84 @@ const Dashboard: React.FC<Props> = ({ defaultSettings, onStart }) => {
             <span className="box-icon">📘</span>
             <div className="box-details">
               <strong>Verbe AVOIR</strong>
-              <span>Futur simple</span>
+              <span>Futur simple (12 cartes)</span>
             </div>
             {mode === 'avoir' && <span className="box-check">✓</span>}
           </button>
-        </div>
-      </div>
-
-      {/* Sélection de la Difficulté avec des boîtes colorées */}
-      <div className="settings-section">
-        <label className="section-title">Difficulté</label>
-        <div className="option-boxes-grid grid-3">
-          <button
-            type="button"
-            className={`option-box box-diff-easy ${difficulty === 'easy' ? 'active' : ''}`}
-            onClick={() => setDifficulty('easy')}
-          >
-            <span className="box-icon">🟢</span>
-            <div className="box-details">
-              <strong>Facile</strong>
-              <span>4 paires</span>
-            </div>
-            {difficulty === 'easy' && <span className="box-check">✓</span>}
-          </button>
 
           <button
             type="button"
-            className={`option-box box-diff-medium ${difficulty === 'medium' ? 'active' : ''}`}
-            onClick={() => setDifficulty('medium')}
+            className={`option-box box-mode-identical ${mode === 'identical' ? 'active' : ''}`}
+            onClick={() => setMode('identical')}
           >
-            <span className="box-icon">🟡</span>
+            <span className="box-icon">🔤</span>
             <div className="box-details">
-              <strong>Moyen</strong>
-              <span>6 paires</span>
+              <strong>Identiques</strong>
+              <span>Images & fruits</span>
             </div>
-            {difficulty === 'medium' && <span className="box-check">✓</span>}
-          </button>
-
-          <button
-            type="button"
-            className={`option-box box-diff-hard ${difficulty === 'hard' ? 'active' : ''}`}
-            onClick={() => setDifficulty('hard')}
-          >
-            <span className="box-icon">🔴</span>
-            <div className="box-details">
-              <strong>Difficile</strong>
-              <span>8 paires</span>
-            </div>
-            {difficulty === 'hard' && <span className="box-check">✓</span>}
+            {mode === 'identical' && <span className="box-check">✓</span>}
           </button>
         </div>
       </div>
 
-      {/* Options */}
+      {/* Difficulté affichée uniquement si mode non éducatif */}
+      {!isEducationalMode && (
+        <div className="settings-section">
+          <label className="section-title">Difficulté</label>
+          <div className="option-boxes-grid grid-3">
+            <button
+              type="button"
+              className={`option-box box-diff-easy ${difficulty === 'easy' ? 'active' : ''}`}
+              onClick={() => setDifficulty('easy')}
+            >
+              <span className="box-icon">🟢</span>
+              <div className="box-details">
+                <strong>Facile</strong>
+                <span>4 paires</span>
+              </div>
+              {difficulty === 'easy' && <span className="box-check">✓</span>}
+            </button>
+
+            <button
+              type="button"
+              className={`option-box box-diff-medium ${difficulty === 'medium' ? 'active' : ''}`}
+              onClick={() => setDifficulty('medium')}
+            >
+              <span className="box-icon">🟡</span>
+              <div className="box-details">
+                <strong>Moyen</strong>
+                <span>6 paires</span>
+              </div>
+              {difficulty === 'medium' && <span className="box-check">✓</span>}
+            </button>
+
+            <button
+              type="button"
+              className={`option-box box-diff-hard ${difficulty === 'hard' ? 'active' : ''}`}
+              onClick={() => setDifficulty('hard')}
+            >
+              <span className="box-icon">🔴</span>
+              <div className="box-details">
+                <strong>Difficile</strong>
+                <span>8 paires</span>
+              </div>
+              {difficulty === 'hard' && <span className="box-check">✓</span>}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Information sur l'exercice par défaut */}
+      {isEducationalMode && (
+        <div className="exercise-info-box">
+          <span className="exercise-info-badge">12 cartes au total</span>
+          <p>
+            Associez chacun des <strong>6 pronoms</strong> (<em>Je, Tu, Il / Elle, Nous, Vous, Ils / Elles</em>) avec sa conjugaison correspondante.
+          </p>
+        </div>
+      )}
+
+      {/* Options audio et animations */}
       <div className="settings-toggles">
         <label className="toggle-item">
           <input type="checkbox" checked={sound} onChange={() => setSound(!sound)} />
@@ -144,7 +159,10 @@ const Dashboard: React.FC<Props> = ({ defaultSettings, onStart }) => {
         </label>
       </div>
 
-      <button className="btn-primary" onClick={() => onStart({ mode, difficulty, sound, animations })}>
+      <button
+        className="btn-primary"
+        onClick={() => onStart({ mode, difficulty: isEducationalMode ? 'medium' : difficulty, sound, animations })}
+      >
         🎮 Commencer à jouer
       </button>
     </div>

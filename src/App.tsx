@@ -7,7 +7,7 @@ import ResultsScreen from './components/ResultsScreen';
 import HowToPlay from './components/HowToPlay';
 import Footer from './components/Footer';
 
-export type GameMode = 'identical' | 'etre' | 'avoir';
+export type GameMode = 'etre' | 'avoir' | 'identical';
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
 export interface Settings {
@@ -28,7 +28,7 @@ export interface GameResult {
 
 const defaultSettings: Settings = {
   mode: 'etre',
-  difficulty: 'easy',
+  difficulty: 'medium', // 6 pairs = 12 cards
   sound: true,
   animations: true,
 };

@@ -92,6 +92,8 @@ const MemoryCard: React.FC<CardProps> = ({
             className="card-text-content"
             style={{
               color: isMatched ? '#065f46' : cardTheme.text,
+              fontSize: content.length > 8 ? '15px' : content.length > 5 ? '17px' : undefined,
+              lineHeight: 1.2,
             }}
           >
             {content}

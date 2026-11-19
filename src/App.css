@@ -420,6 +420,86 @@ body {
   background: #e5e7eb;
 }
 
+/* ---- EXERCISE INFO BOX (DASHBOARD) ---- */
+.exercise-info-box {
+  background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 1.5px solid #86efac;
+  border-radius: 14px;
+  padding: 12px 16px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.exercise-info-badge {
+  display: inline-block;
+  background: #10b981;
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 100px;
+  margin-bottom: 6px;
+}
+
+.exercise-info-box p {
+  font-size: 13px;
+  color: #166534;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* ---- EXERCISE TITLE BANNER (GAME SCREEN) ---- */
+.exercise-title-banner {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 18px;
+  padding: 14px 20px;
+  text-align: center;
+  color: white;
+  width: 100%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.exercise-title-banner h2 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.exercise-subtitle {
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.9;
+  letter-spacing: 0.3px;
+}
+
+/* ---- GAME BOARD GRID FOR 12 CARDS (4x3 on desktop, 3x4 on mobile) ---- */
+.game-board-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.game-board.grid-12-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  .game-board.grid-12-cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+}
+
 /* ---- GAME SCREEN ---- */
 .game-container {
   width: 100%;
